@@ -1,6 +1,5 @@
 package com.coooldoggy.booksearch.network
 
-import android.content.Context
 import android.util.Log
 import com.coooldoggy.booksearch.BASE_BOOK_SEARCH_URL
 import okhttp3.OkHttpClient
