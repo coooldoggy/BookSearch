@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.coooldoggy.booksearch.R
 import com.coooldoggy.booksearch.databinding.FragmentBookDetailBinding
+import com.coooldoggy.booksearch.network.data.BookItem
 import com.coooldoggy.booksearch.network.data.Documents
 import com.coooldoggy.booksearch.ui.viewmodel.BookDetailViewModel
 
@@ -30,19 +31,16 @@ class BookDetailFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let {
-            viewModel.bookItem.value = it.getSerializable(BookDetailViewModel.KEY_BOOK_ITEM) as? Documents
+            viewModel.bookItem.value = it.getSerializable(BookDetailViewModel.KEY_BOOK_ITEM) as? BookItem
+            viewModel.position.value = it.getInt(BookDetailViewModel.KEY_BOOK_ITEM_POSITION)
         }
 
         dataBinding.ivBack.setOnClickListener {
             view.findNavController().popBackStack()
         }
 
-        viewModel.isFav.observe(viewLifecycleOwner, Observer {
-            dataBinding.ivFavorite.isSelected = it
+        viewModel.bookItem.observe(viewLifecycleOwner, Observer {
+            dataBinding.ivFavorite.isSelected = it.isFavorite
         })
-
-        dataBinding.ivFavorite.setOnClickListener {
-            viewModel.toggleIsFav()
-        }
     }
 }

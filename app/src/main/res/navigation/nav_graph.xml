@@ -14,8 +14,12 @@
             app:destination="@id/fragment_book_detail" />
 
         <argument
+            android:name="position"
+            app:argType="integer"/>
+
+        <argument
             android:name="bookItem"
-            app:argType="com.coooldoggy.booksearch.network.data.Documents"/>
+            app:argType="com.coooldoggy.booksearch.network.data.BookItem"/>
 
     </fragment>
 

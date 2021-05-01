@@ -27,7 +27,9 @@
 
         <ImageView
             android:id="@+id/iv_favorite"
-            selected="@{model.isFav()}"
+            android:clickable="true"
+            selected="@{model.bookItem.favorite}"
+            android:onClick="@{() -> model.toggleIsFav()}"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="10dp"
             android:src="@drawable/favorite_selector"
@@ -38,7 +40,7 @@
     <ImageView
         android:id="@+id/iv_book"
         android:layout_marginTop="25dp"
-        imageUrl="@{model.bookItem.thumbnail}"
+        imageUrl="@{model.bookItem.documents.thumbnail}"
         app:layout_constraintTop_toBottomOf="@id/fl_title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -47,7 +49,7 @@
 
     <TextView
         android:id="@+id/tv_title"
-        android:text="@{model.bookItem.title}"
+        android:text="@{model.bookItem.documents.title}"
         android:textStyle="bold"
         android:textSize="15dp"
         android:layout_marginStart="10dp"
@@ -63,7 +65,7 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
-        dateTime="@{model.bookItem.datetime}"
+        dateTime="@{model.bookItem.documents.datetime}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -73,13 +75,13 @@
         app:layout_constraintStart_toEndOf="@+id/tv_date"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        price="@{model.bookItem.price}"
+        price="@{model.bookItem.documents.price}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/tv_pub"
-        android:text="@{model.bookItem.publisher}"
+        android:text="@{model.bookItem.documents.publisher}"
         app:layout_constraintTop_toBottomOf="@id/tv_price"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="10dp"
@@ -89,7 +91,7 @@
 
     <TextView
         android:id="@+id/tv_book_description"
-        android:text="@{model.bookItem.contents}"
+        android:text="@{model.bookItem.documents.contents}"
         android:textAlignment="viewStart"
         app:layout_constraintTop_toBottomOf="@id/tv_pub"
         app:layout_constraintStart_toStartOf="parent"

@@ -2,6 +2,7 @@ package com.coooldoggy.booksearch.ui.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,14 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coooldoggy.booksearch.R
 import com.coooldoggy.booksearch.databinding.FragmentBookSearchBinding
-import com.coooldoggy.booksearch.network.data.Documents
+import com.coooldoggy.booksearch.network.data.BookItem
 import com.coooldoggy.booksearch.ui.viewmodel.BookDetailViewModel
 import com.coooldoggy.booksearch.ui.viewmodel.BookSearchViewModel
 
@@ -25,6 +27,7 @@ class BookSearchFragment: Fragment() {
     private val TAG = BookSearchFragment::class.java.simpleName
     private lateinit var dataBinding: FragmentBookSearchBinding
     private val viewModel by viewModels<BookSearchViewModel>()
+    private val detailViewModel by activityViewModels<BookDetailViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate<FragmentBookSearchBinding>(inflater, R.layout.fragment_book_search, container, false).apply {
@@ -58,9 +61,10 @@ class BookSearchFragment: Fragment() {
 
         dataBinding.rvBook.layoutManager = LinearLayoutManager(context)
         viewModel.adapter.itemClick = object : BookSearchResultAdapter.ItemClick{
-            override fun onClick(view: View, data: Documents) {
+            override fun onClick(view: View, data: BookItem, position: Int) {
                 view.findNavController().navigate(R.id.action_go_to_detail_fragment, bundleOf(
-                    BookDetailViewModel.KEY_BOOK_ITEM to data
+                    BookDetailViewModel.KEY_BOOK_ITEM to data,
+                    BookDetailViewModel.KEY_BOOK_ITEM_POSITION to position
                 ))
             }
         }
@@ -70,6 +74,11 @@ class BookSearchFragment: Fragment() {
                 val adapter = dataBinding.rvBook.adapter
                 (adapter as BookSearchResultAdapter).setData(resultList)
             }
+        })
+
+        detailViewModel.bookItem.observe(viewLifecycleOwner, Observer {
+            val adapter = dataBinding.rvBook.adapter
+            (adapter as BookSearchResultAdapter).setFavorite(it)
         })
     }
 

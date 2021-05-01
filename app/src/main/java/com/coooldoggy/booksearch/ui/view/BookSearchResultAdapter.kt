@@ -8,22 +8,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.coooldoggy.booksearch.R
 import com.coooldoggy.booksearch.databinding.ItemBookBinding
 import com.coooldoggy.booksearch.databinding.NoItemLayoutBinding
+import com.coooldoggy.booksearch.network.data.BookItem
 import com.coooldoggy.booksearch.network.data.BookSearchResponse
-import com.coooldoggy.booksearch.network.data.Documents
 
 class BookSearchResultAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    var bookList = ArrayList<Documents>()
+    var bookList = ArrayList<BookItem>()
     var itemClick : ItemClick? = null
     lateinit var noItemLayoutBinding: NoItemLayoutBinding
     private val TYPE_ITEM = 0
     private val TYPE_NOITEM = 1
 
     interface ItemClick {
-        fun onClick(view : View, data: Documents)
+        fun onClick(view : View, data: BookItem, position: Int)
     }
 
     fun setData(resultList: BookSearchResponse){
-        bookList = resultList.documents
+        resultList.documents.forEach { documents ->
+            bookList.add(BookItem(documents, false))
+        }
         notifyDataSetChanged()
     }
 
@@ -32,7 +34,13 @@ class BookSearchResultAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    private fun getItem(position: Int): Documents{
+    fun setFavorite(item: BookItem){
+        val index = bookList.indexOf(item)
+        bookList[index] = item
+        notifyItemChanged(index)
+    }
+
+    private fun getItem(position: Int): BookItem{
         return bookList[position]
     }
 
@@ -59,7 +67,7 @@ class BookSearchResultAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         (holder as BookItemHolder).apply {
             bind(bookItem)
             itemView.setOnClickListener {
-                itemClick?.onClick(it, bookItem)
+                itemClick?.onClick(it, bookItem, position)
             }
         }
     }

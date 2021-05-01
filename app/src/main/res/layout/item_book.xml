@@ -3,7 +3,7 @@
     <data>
         <variable
             name="model"
-            type="com.coooldoggy.booksearch.network.data.Documents" />
+            type="com.coooldoggy.booksearch.network.data.BookItem" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +16,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:paddingBottom="10dp"
-        imageUrl="@{model.thumbnail}"
+        imageUrl="@{model.documents.thumbnail}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="100dp"
@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/tv_book_title"
-        android:text="@{model.title}"
+        android:text="@{model.documents.title}"
         app:layout_constraintStart_toEndOf="@+id/iv_book"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="20dp"
@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/tv_date"
-        dateTime="@{model.datetime}"
+        dateTime="@{model.documents.datetime}"
         android:textSize="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
@@ -49,7 +49,7 @@
 
     <TextView
         android:id="@+id/tv_book_description"
-        android:text="@{model.contents}"
+        android:text="@{model.documents.contents}"
         app:layout_constraintTop_toBottomOf="@+id/tv_date"
         app:layout_constraintStart_toEndOf="@+id/iv_book"
         android:maxLines="1"
@@ -65,7 +65,7 @@
         android:id="@+id/tv_price"
         app:layout_constraintTop_toBottomOf="@+id/tv_book_description"
         app:layout_constraintStart_toEndOf="@+id/iv_book"
-        price="@{model.price}"
+        price="@{model.documents.price}"
         android:textSize="13dp"
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
@@ -74,6 +74,7 @@
 
     <ImageView
         android:id="@+id/iv_favorite"
+        selected="@{model.favorite}"
         android:padding="10dp"
         android:src="@drawable/favorite_selector"
         app:layout_constraintTop_toBottomOf="@+id/tv_book_description"
