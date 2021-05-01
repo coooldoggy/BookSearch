@@ -1,19 +1,24 @@
-package com.coooldoggy.booksearch.ui
+package com.coooldoggy.booksearch.ui.view
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coooldoggy.booksearch.R
 import com.coooldoggy.booksearch.databinding.FragmentBookSearchBinding
+import com.coooldoggy.booksearch.network.data.Documents
+import com.coooldoggy.booksearch.ui.viewmodel.BookDetailViewModel
 import com.coooldoggy.booksearch.ui.viewmodel.BookSearchViewModel
 
 class BookSearchFragment: Fragment() {
@@ -39,6 +44,7 @@ class BookSearchFragment: Fragment() {
             setOnEditorActionListener{ v, actionId, event ->
                 if (EditorInfo.IME_ACTION_SEARCH == actionId) {
                     viewModel.getSearchResult(context.getString(R.string.kakao_app_key))
+                    hideSoftInputMethod(v)
                     true
                 } else {
                     false
@@ -51,12 +57,30 @@ class BookSearchFragment: Fragment() {
         }
 
         dataBinding.rvBook.layoutManager = LinearLayoutManager(context)
+        viewModel.adapter.itemClick = object : BookSearchResultAdapter.ItemClick{
+            override fun onClick(view: View, data: Documents) {
+                view.findNavController().navigate(R.id.action_go_to_detail_fragment, bundleOf(
+                    BookDetailViewModel.KEY_BOOK_ITEM to data
+                ))
+            }
+        }
 
-//        viewModel.bookSearchList.observe(viewLifecycleOwner, Observer{ item ->
-//            item?.let { itItem ->
-//                val adapter = dataBinding.rvBook.adapter
-//                Log.d(TAG, "item = $itItem")
-//            }
-//        })
+        viewModel.bookSearchList.observe(viewLifecycleOwner, Observer{ item ->
+            item?.let { resultList ->
+                val adapter = dataBinding.rvBook.adapter
+                (adapter as BookSearchResultAdapter).setData(resultList)
+            }
+        })
     }
+
+    private fun hideSoftInputMethod(view: View?) {
+        kotlin.runCatching {
+            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.let {
+                val targetView = view ?: activity?.currentFocus ?: return@let
+                it.hideSoftInputFromWindow(targetView.windowToken, 0)
+            }
+        }
+    }
+
 }

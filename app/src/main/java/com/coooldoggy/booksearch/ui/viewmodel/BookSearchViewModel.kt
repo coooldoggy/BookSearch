@@ -8,15 +8,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.coooldoggy.booksearch.network.ApiManager
-import com.coooldoggy.booksearch.network.data.Documents
-import com.coooldoggy.booksearch.ui.BookSearchResultAdapter
+import com.coooldoggy.booksearch.network.data.BookSearchResponse
+import com.coooldoggy.booksearch.ui.view.BookSearchResultAdapter
 import kotlinx.coroutines.launch
 
 class BookSearchViewModel(application: Application): AndroidViewModel(application) {
     private val TAG = BookSearchViewModel::class.java.simpleName
 
-    private val _bookSearchList = MutableLiveData<ArrayList<Documents>>()
-    val bookSearchList : LiveData<ArrayList<Documents>>
+    private val _bookSearchList = MutableLiveData<BookSearchResponse>()
+    val bookSearchList : LiveData<BookSearchResponse>
         get() = _bookSearchList
 
     val adapter: BookSearchResultAdapter = BookSearchResultAdapter()
@@ -30,15 +30,18 @@ class BookSearchViewModel(application: Application): AndroidViewModel(applicatio
                 return@launch
             }
 
+            adapter.clearData()
+
             kotlin.runCatching {
-               ApiManager.queryBookTitle(header, bookSearch)?.let {
-                   if (it.isSuccessful){
-                       val result = it.body()
+               ApiManager.queryBookTitle(header, bookSearch)?.let { response ->
+                   if (response.isSuccessful){
+                       val result = response.body()
                        Log.d(TAG, "$result")
-                       _bookSearchList.value = result?.documents
-                       adapter.notifyDataSetChanged()
+                       result?.let { it ->
+                           _bookSearchList.value = it
+                       }
                    }else{
-                       Log.d(TAG, "$it")
+                       Log.d(TAG, "$response")
                    }
                }
             }

@@ -1,6 +1,7 @@
 package com.coooldoggy.booksearch.network.data
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -10,7 +11,7 @@ data class BookSearchResponse(
 
     @SerializedName("documents")
     val documents: ArrayList<Documents>
-)
+): Serializable
 
 data class Meta(
     @SerializedName("total_count")
@@ -21,7 +22,7 @@ data class Meta(
 
     @SerializedName("is_end")
     val isEnd: Boolean
-)
+): Serializable
 
 data class Documents(
     @SerializedName("title")
@@ -37,7 +38,7 @@ data class Documents(
     val isbn: String,
 
     @SerializedName("datetime")
-    val datetime: String,
+    val datetime: Date,
 
     @SerializedName("authors")
     val authors: ArrayList<String>,
@@ -59,5 +60,4 @@ data class Documents(
 
     @SerializedName("status")
     val status: String
-
-)
+): Serializable
