@@ -10,7 +10,7 @@
         tools:layout="@layout/fragment_book_search"
         android:name="com.coooldoggy.booksearch.ui.view.BookSearchFragment">
 
-        <action android:id="@+id/action_go_to_detail_fragment"
+        <action android:id="@+id/action_booksearch_to_bookdetail"
             app:destination="@id/fragment_book_detail" />
 
         <argument
@@ -28,7 +28,7 @@
         tools:layout="@layout/fragment_book_detail"
         android:name="com.coooldoggy.booksearch.ui.view.BookDetailFragment">
         <action
-            android:id="@+id/action_go_to_search_fragment"
+            android:id="@+id/action_bookdetail_to_booksearch"
             app:destination="@id/fragment_book_search"/>
     </fragment>
 

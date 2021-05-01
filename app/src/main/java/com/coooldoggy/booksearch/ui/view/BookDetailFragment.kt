@@ -12,7 +12,6 @@ import androidx.navigation.findNavController
 import com.coooldoggy.booksearch.R
 import com.coooldoggy.booksearch.databinding.FragmentBookDetailBinding
 import com.coooldoggy.booksearch.network.data.BookItem
-import com.coooldoggy.booksearch.network.data.Documents
 import com.coooldoggy.booksearch.ui.viewmodel.BookDetailViewModel
 
 class BookDetailFragment: Fragment() {

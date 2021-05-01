@@ -13,4 +13,8 @@ object ApiManager {
         return bookSearchApiService.queryBookTitle(key= header, query = query)
     }
 
+    suspend fun loadMoreBook(header: String, query: String, page: Int): Response<BookSearchResponse>{
+        return bookSearchApiService.queryBookTitle(key = header, query= query, page = page)
+    }
+
 }

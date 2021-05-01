@@ -31,5 +31,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
+    <ViewStub
+        android:id="@+id/vs_no_item"
+        android:visibility="@{model.noItemVisibility}"
+        android:inflatedId="@id/vs_no_item"
+        android:layout="@layout/no_item_layout"
+        app:layout_constraintTop_toTopOf="@id/rv_book"
+        app:layout_constraintBottom_toBottomOf="@id/rv_book"
+        app:layout_constraintStart_toStartOf="@id/rv_book"
+        app:layout_constraintEnd_toEndOf="@id/rv_book"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
