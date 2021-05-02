@@ -4,9 +4,14 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def getDate = { ->
+    return new Date().format('yyyyMMddHHmmssSSS')
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+    archivesBaseName = "BookSearch_coooldoggy"
 
     defaultConfig {
         applicationId "com.coooldoggy.booksearch"
@@ -35,6 +40,17 @@ android {
         dataBinding true
         viewBinding true
     }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = "${archivesBaseName}_${getDate()}_v${android.defaultConfig.versionName}.apk"
+                outputFileName = new File("./", fileName)
+            }
+        }
+    }
+
 }
 
 dependencies {
