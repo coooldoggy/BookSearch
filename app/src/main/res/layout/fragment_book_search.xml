@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="model"
+            type= "com.coooldoggy.booksearch.ui.viewmodel.BookSearchViewModel"/>
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditText
+        android:id="@+id/et_search"
+        android:imeOptions="actionSearch"
+        android:maxLines="1"
+        android:inputType="text"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:drawableEnd="@drawable/ic_search"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_book"
+        adapter="@{model.adapter}"
+        app:layout_constraintTop_toBottomOf="@id/et_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <ViewStub
+        android:id="@+id/vs_no_item"
+        android:visibility="@{model.noItemVisibility}"
+        android:inflatedId="@id/vs_no_item"
+        android:layout="@layout/no_item_layout"
+        app:layout_constraintTop_toTopOf="@id/rv_book"
+        app:layout_constraintBottom_toBottomOf="@id/rv_book"
+        app:layout_constraintStart_toStartOf="@id/rv_book"
+        app:layout_constraintEnd_toEndOf="@id/rv_book"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
