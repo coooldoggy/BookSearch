@@ -13,6 +13,7 @@ interface BookSearchApiService {
     suspend fun queryBookTitle(@Header("Authorization") key: String,
                                @Query("target")target: String = "title",
                                @Query("query")query: String,
+                               @Query("size")size: Int = 50,
                                @Query("page")page: Int = 1) : Response<BookSearchResponse>
 
 }

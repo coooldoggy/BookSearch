@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coooldoggy.booksearch.R
 import com.coooldoggy.booksearch.databinding.ItemBookBinding
-import com.coooldoggy.booksearch.databinding.NoItemLayoutBinding
 import com.coooldoggy.booksearch.network.data.BookItem
 import com.coooldoggy.booksearch.network.data.BookSearchResponse
 
@@ -19,11 +18,17 @@ class BookSearchResultAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         fun onClick(view: View, data: BookItem, position: Int)
     }
 
-    fun setData(resultList: BookSearchResponse) {
+    fun setData(resultList: BookSearchResponse, isLoadMore: Boolean) {
+        val currentItemCount = bookList.size
         resultList.documents.forEach { documents ->
             bookList.add(BookItem(documents, false))
         }
-        notifyDataSetChanged()
+
+        if (isLoadMore){
+            notifyItemRangeInserted(currentItemCount, bookList.size)
+        }else{
+            notifyDataSetChanged()
+        }
     }
 
     fun clearData() {

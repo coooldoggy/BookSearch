@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewStub
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
@@ -44,8 +45,9 @@ class BookSearchFragment: Fragment() {
     }
 
     private fun setResources(){
+        viewModel.noItemText.value = context?.getString(R.string.search_input_require_text)
         dataBinding.etSearch.apply {
-            setOnEditorActionListener{ v, actionId, event ->
+            setOnEditorActionListener{ v, actionId, _ ->
                 if (EditorInfo.IME_ACTION_SEARCH == actionId) {
                     viewModel.getSearchResult(context.getString(R.string.kakao_app_key))
                     hideSoftInputMethod(v)
@@ -85,13 +87,22 @@ class BookSearchFragment: Fragment() {
         viewModel.bookSearchList.observe(viewLifecycleOwner, Observer{ item ->
             item?.let { resultList ->
                 val adapter = dataBinding.rvBook.adapter
-                (adapter as BookSearchResultAdapter).setData(resultList)
+                (adapter as BookSearchResultAdapter).setData(resultList, viewModel.isLoadMore.value ?: false)
             }
         })
 
         viewModel.noItemVisibility.observe(viewLifecycleOwner, Observer {
             val noItemView = view?.findViewById<View>(R.id.vs_no_item)
             noItemView?.visibility = it
+        })
+
+        viewModel.noItemText.observe(viewLifecycleOwner, Observer {
+            val noItemView = view?.findViewById<View>(R.id.vs_no_item)
+            noItemView?.findViewById<TextView>(R.id.tv_alert)?.text = it
+        })
+
+        viewModel.message.observe(viewLifecycleOwner, Observer {
+            Toast.makeText(context, it.peekContent(), Toast.LENGTH_SHORT).show()
         })
 
         detailViewModel.bookItem.observe(viewLifecycleOwner, Observer {

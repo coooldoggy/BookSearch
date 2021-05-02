@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.coooldoggy.booksearch.R
 import com.coooldoggy.booksearch.network.ApiManager
 import com.coooldoggy.booksearch.network.data.BookSearchResponse
 import com.coooldoggy.booksearch.ui.view.BookSearchResultAdapter
@@ -23,9 +24,16 @@ class BookSearchViewModel(application: Application): AndroidViewModel(applicatio
     val adapter: BookSearchResultAdapter = BookSearchResultAdapter()
     val searchText = MutableLiveData<String>()
     val noItemVisibility = MutableLiveData<Int>(View.VISIBLE)
+    val noItemText = MutableLiveData<String>()
+    private val toastMessage = MutableLiveData<ViewModelEvent<String>>()
+    val message : LiveData<ViewModelEvent<String>>
+        get() = toastMessage
+    val isLoadMore = MutableLiveData<Boolean>(false)
+
     private var pageCount: Int = 1
 
-    fun plusCountPage(): Int{
+
+    private fun plusCountPage(): Int{
         return ++pageCount
     }
 
@@ -38,7 +46,7 @@ class BookSearchViewModel(application: Application): AndroidViewModel(applicatio
         viewModelScope.launch {
             val bookSearch = searchText.value
             if (bookSearch.isNullOrEmpty()){
-                Toast.makeText(getApplication(), "검색어를 입력해 주세요!", Toast.LENGTH_SHORT).show()
+                toastMessage.value = ViewModelEvent(getApplication<Application>().getString(R.string.search_input_require_text))
                 return@launch
             }
 
@@ -52,11 +60,14 @@ class BookSearchViewModel(application: Application): AndroidViewModel(applicatio
                        Log.d(TAG, "$result")
                        result?.let { it ->
                            _bookSearchList.value = it
+                           isLoadMore.value = false
                        }
                    }else{
-                       noItemVisibility.postValue(View.VISIBLE)
+                       showErrorPage(getApplication<Application>().getString(R.string.error_text))
                    }
                }
+            }.onFailure {
+                showErrorPage(getApplication<Application>().getString(R.string.error_text))
             }
         }
     }
@@ -68,7 +79,7 @@ class BookSearchViewModel(application: Application): AndroidViewModel(applicatio
             kotlin.runCatching {
 
                 if(meta.isEnd || pageCount >= meta.pageableCount){
-                    Toast.makeText(getApplication(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show()
+                    toastMessage.value = ViewModelEvent(getApplication<Application>().getString(R.string.alert_last_page))
                     return@launch
                 }
 
@@ -79,12 +90,20 @@ class BookSearchViewModel(application: Application): AndroidViewModel(applicatio
                         Log.d(TAG, "$result")
                         result?.let { it ->
                             _bookSearchList.value = it
+                            isLoadMore.value = true
                         }
                     }else{
-                        noItemVisibility.postValue(View.VISIBLE)
+                        showErrorPage(getApplication<Application>().getString(R.string.error_text))
                     }
                 }
+            }.onFailure {
+                showErrorPage(getApplication<Application>().getString(R.string.error_text))
             }
         }
+    }
+
+    private fun showErrorPage(errorMsg: String){
+        noItemVisibility.postValue(View.VISIBLE)
+        noItemText.value = errorMsg
     }
 }
