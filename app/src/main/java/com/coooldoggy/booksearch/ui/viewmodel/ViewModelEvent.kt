@@ -1,6 +1,5 @@
 package com.coooldoggy.booksearch.ui.viewmodel
 
-import androidx.lifecycle.Observer
 
 open class ViewModelEvent<out T>(private val content: T) {
 

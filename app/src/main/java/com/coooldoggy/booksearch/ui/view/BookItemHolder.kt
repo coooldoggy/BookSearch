@@ -11,7 +11,3 @@ class BookItemHolder (private val binding: ItemBookBinding) : RecyclerView.ViewH
         binding.model = book
     }
 }
-
-class NoItemHolder(private val binding: NoItemLayoutBinding): RecyclerView.ViewHolder(binding.root) {
-
-}
